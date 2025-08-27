@@ -134,6 +134,12 @@ function M.get_default_config()
                     local lines = vim.api.nvim_buf_line_count(bufnr)
 
                     local edited = false
+                    if list_item.context == nil then
+                        list_item.context = {
+                            row = 1,
+                            col = 0,
+                        }
+                    end
                     if list_item.context.row > lines then
                         list_item.context.row = lines
                         edited = true
@@ -237,8 +243,15 @@ function M.get_default_config()
                         pos
                     )
 
-                    item.context.row = pos[1]
-                    item.context.col = pos[2]
+                    if item.context == nil then
+                        item.context = {
+                            row = pos[1],
+                            col = pos[2],
+                        }
+                    else
+                        item.context.row = pos[1]
+                        item.context.col = pos[2]
+                    end
 
                     Extensions.extensions:emit(
                         Extensions.event_names.POSITION_UPDATED,
